@@ -1,16 +1,14 @@
 package com.example.rouge.comicsense;
 
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.MenuItem;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,68 +16,71 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
+import com.example.rouge.comicsense.Adapter.ComicAdapter;
 import com.example.rouge.comicsense.Model.Comic;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
-    private int newestComicNr, currentComicNr;
-    private TextView title, description;
-    private ImageView comicImg;
+    private RequestQueue requestQueue;
+
+    private List<Comic> comicList;
+    private List<Comic> result;
+    private List<Comic> reset;
+    private RecyclerView.Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_second);
+
+        requestQueue = Volley.newRequestQueue(this);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        comicList = new ArrayList<>();
+        reset = new ArrayList<>();
+        adapter = new ComicAdapter(this, comicList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
 
         String COMIC_URL = "https://xkcd.com/info.0.json";
 
-        title = findViewById(R.id.comic_title);
-        comicImg = findViewById(R.id.comic_img);
-        description = findViewById(R.id.comic_description);
-        Button previous = findViewById(R.id.previous);
-        Button next = findViewById(R.id.next);
+        ArrayList<String> urls = new ArrayList<>();
+        urls.add("https://xkcd.com/2063/info.0.json");
+        urls.add("https://xkcd.com/2064/info.0.json");
+        urls.add("https://xkcd.com/2065/info.0.json");
+        urls.add("https://xkcd.com/2066/info.0.json");
+        urls.add("https://xkcd.com/2067/info.0.json");
+        urls.add("https://xkcd.com/2068/info.0.json");
+        urls.add("https://xkcd.com/2069/info.0.json");
+        urls.add("https://xkcd.com/2070/info.0.json");
+        urls.add("https://xkcd.com/2071/info.0.json");
+        urls.add("https://xkcd.com/2072/info.0.json");
 
-        getJsonComic(COMIC_URL);
+        String startUrl = "https://xkcd.com/";
+        String endUrl = "/info.0.json";
+        int nr = 2075;
 
-        previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int previousComic = currentComicNr - 1;
-                currentComicNr = previousComic;
-
-                String startUrl = "https://xkcd.com/";
-                String endUrl = "/info.0.json";
-
-                getJsonComic(startUrl + previousComic + endUrl);
-            }
-        });
-
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String startUrl = "https://xkcd.com/";
-                String endUrl = "/info.0.json";
-                int nextComic = currentComicNr + 1;
-                currentComicNr = nextComic;
-
-                if(nextComic > newestComicNr) {
-                    Toast.makeText(getApplicationContext(), "No comic after this, I'm afraid..", Toast.LENGTH_SHORT).show();
-                    //Log.d("nummer", "newest " + newestComicNr);
-                    //Log.d("nummer", "current " + currentComicNr);
-                } else {
-                    //Toast.makeText(getApplicationContext(), "" + nextComic, Toast.LENGTH_SHORT).show();
-                    getJsonComic(startUrl + nextComic + endUrl);
-                }
-            }
-        });
-
+        while(nr > 0) {
+            getJsonComic(startUrl + nr + endUrl);
+            nr--;
+        }
+        //getJsonComic(COMIC_URL);
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
+        final MenuItem searhItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searhItem);
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -89,7 +90,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
+    public boolean onQueryTextChange(String query) {
+        result = new ArrayList<>();
+
+        for(Comic comic : reset)
+            if (comic.getTitle().toLowerCase().contains(query) || String.valueOf(comic.getNum()).equals(query)) {
+                result.add(comic);
+            }
+
+        comicList.clear();
+        comicList.addAll(result);
+
+        if(query.equals("")) {
+            comicList.addAll(reset);
+        }
+        adapter.notifyDataSetChanged();
+
         return false;
     }
 
@@ -98,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 (Request.Method.GET, s, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+
                         Comic comic = new Comic();
                         comic.setMonth(response.optString("month"));
                         comic.setNum(response.optInt("num"));
@@ -111,14 +128,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         comic.setTitle(response.optString("title"));
                         comic.setDay(response.optString("day"));
 
-                        title.setText(comic.getTitle());
-                        Glide.with(getApplicationContext()).load(comic.getImg()).into(comicImg);
-                        description.setText(comic.getAlt());
+                        comicList.add(comic);
+                        reset.add(comic);
 
+                        Log.d("getJson", comic.toString());
+                        /*
                         if(currentComicNr == 0) {
                             newestComicNr = comic.getNum();
                             currentComicNr = newestComicNr;
-                        }
+                        }*/
+                        adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
 
@@ -127,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         Log.e("volley", error.toString());
                     }
                 });
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
     }
 
