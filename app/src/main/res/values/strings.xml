@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Comic Sense</string>
+    <string name="comic_image">comic image</string>
+    <string name="action_search">Search</string>
+</resources>

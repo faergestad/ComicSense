@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/main_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <ImageView
+        android:id="@+id/main_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/comic_image" />
+
+    <TextView
+        android:id="@+id/main_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rating"/>
+
+    <TextView
+        android:id="@+id/main_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
