@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/newest"
+        android:icon="@drawable/newest"
+        android:title="Newest" />
+
+    <item
+        android:id="@+id/browse"
+        android:icon="@drawable/browse"
+        android:title="Browse" />
+
+    <item
+        android:id="@+id/favorites"
+        android:icon="@drawable/fav"
+        android:title="Favorites" />
+
+</menu>

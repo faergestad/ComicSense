@@ -27,7 +27,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_comic, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -61,8 +61,8 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
 
             comicImage = itemView.findViewById(R.id.main_img);
             titleTxtView = itemView.findViewById(R.id.main_title);
-            nrTxtView = itemView.findViewById(R.id.main_nr);
-            descTxtView = itemView.findViewById(R.id.main_rating);
+            nrTxtView = itemView.findViewById(R.id.main_description);
+            descTxtView = itemView.findViewById(R.id.main_nr);
         }
 
         @Override

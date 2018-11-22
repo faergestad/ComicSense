@@ -8,7 +8,7 @@ public class Comic {
     public Comic() {
     }
 
-    public Comic(String month, int num, String link, String year, String news, String safeTitle, String transcript, String alt, String img, String title, String day) {
+    /*public Comic(String month, int num, String link, String year, String news, String safeTitle, String transcript, String alt, String img, String title, String day) {
         this.month = month;
         this.link = link;
         this.year = year;
@@ -26,7 +26,7 @@ public class Comic {
         this.img = img;
         this.title = title;
         this.day = day;
-    }
+    }*/
 
     public String getMonth() {
         return month;
