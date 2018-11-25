@@ -1,10 +1,11 @@
 # xkcdComics
 App for viewing xkcd comics
 
-![1](https://user-images.githubusercontent.com/20108194/48985307-63b98300-f106-11e8-8d89-6117d99b8e6d.jpg) ![2](https://user-images.githubusercontent.com/20108194/48985308-63b98300-f106-11e8-888f-3411072b7450.jpg)
-![3](https://user-images.githubusercontent.com/20108194/48985309-63b98300-f106-11e8-808a-dfff452d092b.jpg)
-![4](https://user-images.githubusercontent.com/20108194/48985310-64521980-f106-11e8-9c46-cc1221025311.jpg)
-![5](https://user-images.githubusercontent.com/20108194/48985311-64521980-f106-11e8-8f7e-2d7ac820431e.jpg)
-![6](https://user-images.githubusercontent.com/20108194/48985312-64521980-f106-11e8-9d2d-8bf8f3a2fcbe.jpg)
-![7](https://user-images.githubusercontent.com/20108194/48985313-64521980-f106-11e8-8224-61174b4ff760.jpg)
-![8](https://user-images.githubusercontent.com/20108194/48985314-64eab000-f106-11e8-8556-cdef6e8a7019.jpg)
+![1](https://user-images.githubusercontent.com/20108194/48985340-aed39600-f106-11e8-929d-0c8f82f8ad6e.jpg)
+![2](https://user-images.githubusercontent.com/20108194/48985341-aed39600-f106-11e8-80ac-8f88af2252bc.jpg)
+![3](https://user-images.githubusercontent.com/20108194/48985342-aed39600-f106-11e8-81c9-279138c6c106.jpg)
+![4](https://user-images.githubusercontent.com/20108194/48985343-aed39600-f106-11e8-834f-fda81ad1793a.jpg)
+![5](https://user-images.githubusercontent.com/20108194/48985344-aed39600-f106-11e8-805f-b0937cf6693a.jpg)
+![6](https://user-images.githubusercontent.com/20108194/48985345-af6c2c80-f106-11e8-99d7-4ba2c26174f9.jpg)
+![7](https://user-images.githubusercontent.com/20108194/48985346-af6c2c80-f106-11e8-984c-925b64d0b0a0.jpg)
+![8](https://user-images.githubusercontent.com/20108194/48985347-af6c2c80-f106-11e8-85f5-87439470861e.jpg)
