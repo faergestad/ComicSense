@@ -78,8 +78,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
 
         reset = new ArrayList<>();
 
-        //final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
