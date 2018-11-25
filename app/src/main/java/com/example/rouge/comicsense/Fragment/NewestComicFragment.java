@@ -28,6 +28,7 @@ import java.util.Objects;
 
 public class NewestComicFragment extends Fragment {
 
+    private RequestQueue requestQueue;
     private TextView titleTxtView, descTxtView, nrTxtView;
     private ImageView comicImg;
 
@@ -43,6 +44,8 @@ public class NewestComicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_newest_comic, container, false);
+
+        requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()));
 
         titleTxtView = view.findViewById(R.id.main_title);
         descTxtView = view.findViewById(R.id.main_description);
@@ -93,7 +96,6 @@ public class NewestComicFragment extends Fragment {
                         Log.e("volley", error.toString());
                     }
                 });
-        RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()));
         requestQueue.add(jsonObjectRequest);
     }
 

@@ -4,6 +4,7 @@ public class Comic {
 
     private String month, link, year, news, safeTitle, transcript, alt, img, title, day;
     private int num;
+    private byte[] imgBytes;
 
     public Comic() {
     }
@@ -114,6 +115,14 @@ public class Comic {
 
     public void setNum(int num) {
         this.num = num;
+    }
+
+    public byte[] getImgBytes() {
+        return imgBytes;
+    }
+
+    public void setImgBytes(byte[] imgBytes) {
+        this.imgBytes = imgBytes;
     }
 
     @Override

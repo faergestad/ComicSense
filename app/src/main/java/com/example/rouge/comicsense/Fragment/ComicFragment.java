@@ -102,7 +102,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-        // TODO get newest comic nr from SharedPreferences
+
         SharedPreferences pref = getActivity().getSharedPreferences("NewestComic", 0);
         NEWEST_COMICNR = pref.getInt("newest", 0);
         nr = NEWEST_COMICNR;

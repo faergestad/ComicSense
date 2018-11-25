@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.daimajia.swipe.SwipeLayout;
+import com.example.rouge.comicsense.Database.DatabaseHelper;
 import com.example.rouge.comicsense.Model.Comic;
 import com.example.rouge.comicsense.R;
 
@@ -34,6 +36,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
 
     private List<Comic> comics;
     private Context context;
+    private DatabaseHelper db;
 
     public ComicAdapter(Context context, List<Comic> comics) {
         super();
@@ -94,6 +97,8 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
                 Toast.makeText(v.getContext(), "Added #" +
                         comic.getNum() + " to favorites", Toast.LENGTH_SHORT).show();
 
+                addComicToFavs(comic);
+
                 Log.d("Favorite", "" + holder.comicImage.getDrawable());
             }
         });
@@ -105,8 +110,6 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
                 share.setType("text/plain");
                 share.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
-                // Add data to the intent, the receiving app will decide
-                // what to do with it.
                 share.putExtra(Intent.EXTRA_SUBJECT, "xkcd: " + comic.getTitle());
                 share.putExtra(Intent.EXTRA_TEXT, "https://xkcd.com/" + comic.getNum());
 
@@ -125,8 +128,19 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
 
     }
 
+    private void addComicToFavs(Comic comic) {
+        new DatabaseHelper(context).addComic(comic);
+    }
+
+    @Override
+    public int getItemCount() {
+        return comics.size();
+    }
+
     public static class getExplanation extends AsyncTask {
         private WeakReference<Context> contextRef;
+
+        private String output = "Hm.. The server with explanations seems to be down";
 
         getExplanation(Context context) {
             contextRef = new WeakReference<>(context);
@@ -136,6 +150,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
         protected Object doInBackground(Object[] params) {
             StringBuilder explanation = new StringBuilder();
             Document doc;
+            Log.d("getExplanation", "" + params[0]);
             try {
                 doc = Jsoup.connect((String) params[0]).get();
                 Elements paragraphs = doc.select("p");
@@ -147,7 +162,6 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return String.valueOf(explanation);
         }
 
@@ -156,20 +170,26 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
             Context context = contextRef.get();
             if (context != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage(String.valueOf(result));
-                builder.setPositiveButton("Haha, I get it!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                    }
-                });
+
+                if(result.equals("")) {
+                    builder.setMessage("Hm.. The explanation server seems to be down. Terribly sorry. Try again later");
+                    builder.setPositiveButton("Unacceptable!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                } else {
+                    builder.setMessage(String.valueOf(result));
+                    builder.setPositiveButton("Haha, I get it!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                        }
+                    });
+                }
                 builder.show();
             }
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return comics.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
