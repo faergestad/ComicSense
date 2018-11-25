@@ -1,5 +1,6 @@
 package com.example.rouge.comicsense.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -35,12 +36,9 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
 
     private RequestQueue requestQueue;
 
-    private List<Comic> allComics;
     private List<Comic> comicList;
-    private List<Comic> result;
     private List<Comic> reset;
 
-    private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private LinearLayoutManager linearLayoutManager;
 
@@ -49,8 +47,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
     private int pastVisibleItems;
     private int nr;
     private int counter;
-    private final int visibleLimit = 5;
-    private final int NEWEST_COMICNR = 2076;
+    private int NEWEST_COMICNR;
 
     public ComicFragment() {
     }
@@ -66,13 +63,13 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
         View view = inflater.inflate(R.layout.fragment_comic, container, false);
 
         comicList = new ArrayList<>();
-        allComics = new ArrayList<>();
+
         adapter = new ComicAdapter(getContext(), comicList);
 
         requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()));
 
         linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView = view.findViewById(R.id.recyclerview);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -106,7 +103,10 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
             }
         });
         // TODO get newest comic nr from SharedPreferences
+        SharedPreferences pref = getActivity().getSharedPreferences("NewestComic", 0);
+        NEWEST_COMICNR = pref.getInt("newest", 0);
         nr = NEWEST_COMICNR;
+        Log.d("comicnr", "comic #" + nr);
 
         getComics();
         getAllComics();
@@ -135,7 +135,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
                             comic.setTitle(response.optString("title"));
                             comic.setDay(response.optString("day"));
 
-                            allComics.add(comic);
                             reset.add(comic);
 
                         }
@@ -153,6 +152,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
     }
 
     public void getComics() {
+        int visibleLimit = 5;
         while (counter < visibleLimit) {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.GET, "https://xkcd.com/" + nr + "/info.0.json", null, new Response.Listener<JSONObject>() {
@@ -204,7 +204,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        result = new ArrayList<>();
+        List<Comic> result = new ArrayList<>();
 
         for (Comic comic : reset)
             if (comic.getTitle().toLowerCase().contains(query) || String.valueOf(comic.getNum()).equals(query)) {
@@ -228,6 +228,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
             comicList.clear();
             adapter.notifyDataSetChanged();
             getComics();
+            nr = NEWEST_COMICNR;
         }
         return false;
     }

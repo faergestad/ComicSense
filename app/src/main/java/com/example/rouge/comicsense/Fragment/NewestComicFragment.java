@@ -1,5 +1,6 @@
 package com.example.rouge.comicsense.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -54,6 +55,10 @@ public class NewestComicFragment extends Fragment {
     }
 
     private void getNewestComic() {
+
+        SharedPreferences pref = Objects.requireNonNull(getActivity()).getSharedPreferences("NewestComic", 0);
+        final SharedPreferences.Editor editor = pref.edit();
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://xkcd.com/info.0.json", null, new Response.Listener<JSONObject>() {
                     @Override
@@ -77,6 +82,9 @@ public class NewestComicFragment extends Fragment {
                         descTxtView.setText(comic.getAlt());
                         nrTxtView.setText(nrTxt);
                         Glide.with(Objects.requireNonNull(getActivity())).load(comic.getImg()).into(comicImg);
+
+                        editor.putInt("newest", comic.getNum());
+                        editor.apply();
 
                     }
                 }, new Response.ErrorListener() {
