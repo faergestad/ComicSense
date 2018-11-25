@@ -29,21 +29,26 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ComicFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    private final String TAG = "ComicFragment";
     private RequestQueue requestQueue;
 
     private List<Comic> allComics;
     private List<Comic> comicList;
     private List<Comic> result;
     private List<Comic> reset;
+
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private LinearLayoutManager linearLayoutManager;
-    private boolean loading;
-    private int visibleItemCount, totalItemCount, pastVisibleItems, nr, newestNr, counter;
+
+    private int visibleItemCount;
+    private int totalItemCount;
+    private int pastVisibleItems;
+    private int nr;
+    private int counter;
     private final int visibleLimit = 5;
     private final int NEWEST_COMICNR = 2076;
 
@@ -57,33 +62,27 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comic, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerview);
-
         comicList = new ArrayList<>();
-
         allComics = new ArrayList<>();
-
         adapter = new ComicAdapter(getContext(), comicList);
 
-        requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()));
 
         linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
         reset = new ArrayList<>();
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        //final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-
-        loading = true;
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -93,7 +92,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-
                 if (dy > 0) {
                     visibleItemCount = linearLayoutManager.getChildCount();
                     totalItemCount = linearLayoutManager.getItemCount();
@@ -111,7 +109,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
         });
         // TODO get newest comic nr from SharedPreferences
         nr = NEWEST_COMICNR;
-        newestNr = nr;
 
         getComics();
         getAllComics();
@@ -143,7 +140,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
                             allComics.add(comic);
                             reset.add(comic);
 
-                            //adapter.notifyDataSetChanged();
                         }
                     }, new Response.ErrorListener() {
 
@@ -159,8 +155,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
     }
 
     public void getComics() {
-        nr = NEWEST_COMICNR;
-
         while (counter < visibleLimit) {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.GET, "https://xkcd.com/" + nr + "/info.0.json", null, new Response.Listener<JSONObject>() {
@@ -181,7 +175,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
                             comic.setDay(response.optString("day"));
 
                             comicList.add(comic);
-                            //reset.add(comic);
 
                             adapter.notifyDataSetChanged();
                         }
@@ -193,14 +186,12 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
                         }
                     });
             requestQueue.add(jsonObjectRequest);
-
             nr--;
-            Log.d("Loading", "nr " + nr);
+            Log.d("Loading", "nr after-- " + nr);
             counter++;
             Log.d("Loading", "counter " + counter);
         }
         counter = 0;
-        Log.d("Loading", "counter after loop " + counter);
     }
 
     @Override
@@ -216,7 +207,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
     public boolean onQueryTextSubmit(String query) {
 
         result = new ArrayList<>();
-        // TODO fix this to not only search the loaded items
+
         for (Comic comic : reset)
             if (comic.getTitle().toLowerCase().contains(query) || String.valueOf(comic.getNum()).equals(query)) {
                 result.add(comic);
@@ -235,26 +226,11 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
 
     @Override
     public boolean onQueryTextChange(String query) {
-        /*result = new ArrayList<>();
-        // TODO fix this to not only search the loaded items
-        for (Comic comic : reset)
-            if (comic.getTitle().toLowerCase().contains(query) || String.valueOf(comic.getNum()).equals(query)) {
-                result.add(comic);
-            }
-
-        comicList.clear();
-        comicList.addAll(result);
-
-        if (query.equals("")) {
-            comicList.addAll(reset);
-        }
-        adapter.notifyDataSetChanged();*/
         if(query.equals("")) {
             comicList.clear();
             adapter.notifyDataSetChanged();
             getComics();
         }
-
         return false;
     }
 

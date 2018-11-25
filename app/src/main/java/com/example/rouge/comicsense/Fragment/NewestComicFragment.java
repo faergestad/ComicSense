@@ -1,6 +1,7 @@
 package com.example.rouge.comicsense.Fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import com.example.rouge.comicsense.R;
 
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 
 public class NewestComicFragment extends Fragment {
 
@@ -28,7 +31,6 @@ public class NewestComicFragment extends Fragment {
     private ImageView comicImg;
 
     public NewestComicFragment() {
-
     }
 
     @Override
@@ -37,7 +39,7 @@ public class NewestComicFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_newest_comic, container, false);
 
@@ -52,12 +54,10 @@ public class NewestComicFragment extends Fragment {
     }
 
     private void getNewestComic() {
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://xkcd.com/info.0.json", null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
                         Comic comic = new Comic();
                         comic.setMonth(response.optString("month"));
                         comic.setNum(response.optInt("num"));
@@ -76,21 +76,17 @@ public class NewestComicFragment extends Fragment {
                         titleTxtView.setText(comic.getTitle());
                         descTxtView.setText(comic.getAlt());
                         nrTxtView.setText(nrTxt);
-                        Glide.with(getActivity()).load(comic.getImg()).into(comicImg);
-
-                        Log.d("Newest", comic.toString());
+                        Glide.with(Objects.requireNonNull(getActivity())).load(comic.getImg()).into(comicImg);
 
                     }
                 }, new Response.ErrorListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("volley", error.toString());
                     }
                 });
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()));
         requestQueue.add(jsonObjectRequest);
-
     }
 
 }
