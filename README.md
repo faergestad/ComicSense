@@ -1,7 +1,7 @@
 # xkcdComics
 App for viewing xkcd comics
 
-Uses Recyclerview, jsoup, volley, Glide, and swipelayout "github.com/daimajia/AndroidSwipeLayout/"
+Uses Recyclerview, jsoup, volley, Glide, and swipelayout "https://github.com/daimajia/AndroidSwipeLayout/"
 
 ![1](https://user-images.githubusercontent.com/20108194/48985340-aed39600-f106-11e8-929d-0c8f82f8ad6e.jpg)
 ![2](https://user-images.githubusercontent.com/20108194/48985341-aed39600-f106-11e8-80ac-8f88af2252bc.jpg)  
