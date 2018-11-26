@@ -39,18 +39,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE_FAVORITES = "CREATE TABLE " + TABLE_FAVORITES + "("
-                + KEY_NUM +" INTEGER PRIMARY KEY,"
-                + KEY_MONTH +" TEXT,"
-                + KEY_LINK +" TEXT,"
-                + KEY_YEAR +" TEXT,"
-                + KEY_NEWS +" TEXT,"
-                + KEY_SAFE_TITLE +" TEXT,"
-                + KEY_TRANSCRIPT +" TEXT,"
-                + KEY_ALT +" TEXT,"
-                + KEY_IMG_URL +" TEXT,"
-                + KEY_TITLE +" TEXT,"
-                + KEY_DAY +" TEXT,"
-                + KEY_IMG +" BLOB" + ")";
+                + KEY_NUM + " INTEGER PRIMARY KEY,"
+                + KEY_MONTH + " TEXT,"
+                + KEY_LINK + " TEXT,"
+                + KEY_YEAR + " TEXT,"
+                + KEY_NEWS + " TEXT,"
+                + KEY_SAFE_TITLE + " TEXT,"
+                + KEY_TRANSCRIPT + " TEXT,"
+                + KEY_ALT + " TEXT,"
+                + KEY_IMG_URL + " TEXT,"
+                + KEY_TITLE + " TEXT,"
+                + KEY_DAY + " TEXT,"
+                + KEY_IMG + " BLOB" + ")";
         db.execSQL(CREATE_TABLE_FAVORITES);
 
     }
@@ -91,7 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectAll, null);
 
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 Comic comic = new Comic();
                 comic.setNum(Integer.parseInt(cursor.getString(0)));
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void deleteFavoritedComic(int num) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_FAVORITES, KEY_NUM + " = ?", new String[] {String.valueOf(num)});
+        db.delete(TABLE_FAVORITES, KEY_NUM + " = ?", new String[]{String.valueOf(num)});
         db.close();
     }
 

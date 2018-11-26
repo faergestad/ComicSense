@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +35,6 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
 
     private List<Comic> comics;
     private Context context;
-    private DatabaseHelper db;
 
     public ComicAdapter(Context context, List<Comic> comics) {
         super();
@@ -171,7 +169,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ViewHolder> 
             if (context != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                if(result.equals("")) {
+                if (result.equals("")) {
                     builder.setMessage("Hm.. The explanation server seems to be down. Terribly sorry. Try again later");
                     builder.setPositiveButton("Unacceptable!", new DialogInterface.OnClickListener() {
                         @Override

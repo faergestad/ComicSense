@@ -9,26 +9,6 @@ public class Comic {
     public Comic() {
     }
 
-    /*public Comic(String month, int num, String link, String year, String news, String safeTitle, String transcript, String alt, String img, String title, String day) {
-        this.month = month;
-        this.link = link;
-        this.year = year;
-        this.news = news;
-        this.safeTitle = safeTitle;
-        this.transcript = transcript;
-        this.alt = alt;
-        this.img = img;
-        this.title = title;
-        this.day = day;
-        this.num = num;
-    }
-
-    public Comic(String img, String title, String day) {
-        this.img = img;
-        this.title = title;
-        this.day = day;
-    }*/
-
     public String getMonth() {
         return month;
     }

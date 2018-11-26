@@ -79,6 +79,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        // ScrollListener that loads new comics when needed to speed up loading
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -102,7 +103,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-
+        // Gets the newest comicnr
         SharedPreferences pref = getActivity().getSharedPreferences("NewestComic", 0);
         NEWEST_COMICNR = pref.getInt("newest", 0);
         nr = NEWEST_COMICNR;
@@ -194,6 +195,7 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflates search menu in appbar
         inflater.inflate(R.menu.search, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -203,7 +205,6 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-
         List<Comic> result = new ArrayList<>();
 
         for (Comic comic : reset)
@@ -224,7 +225,8 @@ public class ComicFragment extends Fragment implements SearchView.OnQueryTextLis
 
     @Override
     public boolean onQueryTextChange(String query) {
-        if(query.equals("")) {
+        // Is supposed to clear the search and reset the result by getting the newest comics, again
+        if (query.equals("")) {
             comicList.clear();
             adapter.notifyDataSetChanged();
             getComics();
